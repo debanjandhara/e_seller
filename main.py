@@ -3,15 +3,10 @@ from flask import Flask, request
 
 from website_scraping.scrape_n_store import website_to_text, read_file_to_string
 from website_scraping.sitemap_handling import return_sitemap, read_json_from_file, filter_json_by_sl_number, create_filtered_json_for_vectorise
-from website_scraping.utils import save_filename
+from website_scraping.utils import *
 from website_scraping.token_counter import num_tokens_from_string
 
-
-
-# from .website_scraping import scrape_n_store
-# from .website_scraping import sitemap_handling
-# from .website_scraping import utils
-# from .website_scraping import token_counter
+from db_store_n_query.vector_create_n_query import *
 
 
 app = Flask(__name__)
@@ -47,6 +42,47 @@ def return_no_of_tokens_from_selection():
     # response2 = str(num_tokens_from_string(string_for_token_count))
     response2 = str(num_tokens_from_string(read_file_to_string(create_filtered_json_for_vectorise(filename, filter_json_by_sl_number(sl_numbers, filename)))))
     return response2
+
+@app.route('/create_vector_from_website', methods=['POST'])
+def create_vector_from_website():
+    website = request.args.get('website')
+    user_id = request.args.get('user_id')
+    vector_name = vector_name_find(website, user_id)
+    content = read_file_to_string(vector_name)
+    create_vector(content, vector_name)
+    response3 = "created vector"
+    return response3
+
+
+@app.route('/query_vectors', methods=['POST'])
+def merge_vectors():
+    website = request.args.get('website')
+    user_id = request.args.get('user_id')
+    query = request.args.get('query')
+    response4 = query_from_vector(query, vector_name)
+    return response4
+
+
+# left this one 👇
+
+@app.route('/create_vector_from_document', methods=['POST'])
+def create_vector_from_document():
+    website = request.args.get('website')
+    user_id = request.args.get('user_id')
+    sl_numbers = eval(request.args.get('sl_numbers'))
+    filename = save_filename(website, user_id)
+    response2 = str(num_tokens_from_string(read_file_to_string(create_filtered_json_for_vectorise(filename, filter_json_by_sl_number(sl_numbers, filename)))))
+    return response2
+
+@app.route('/merge_vectors', methods=['POST'])
+def merge_vectors():
+    website = request.args.get('website')
+    user_id = request.args.get('user_id')
+    sl_numbers = eval(request.args.get('sl_numbers'))
+    filename = save_filename(website, user_id)
+    response2 = str(num_tokens_from_string(read_file_to_string(create_filtered_json_for_vectorise(filename, filter_json_by_sl_number(sl_numbers, filename)))))
+    return response2
+
 
 # Opening tunnel
 public_url = ngrok.connect("5000", "http")
