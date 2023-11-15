@@ -23,10 +23,11 @@ def scrape_and_return_sitemap():
     user_id = request.args.get('user_id')
     max_depth = int(request.args.get('max_depth'))
     total_number_of_links = int(request.args.get('total_number_of_links'))
-    # filename = website_to_text(website, user_id, max_depth, total_number_of_links)
-    # fetched_entire_website = read_json_from_file(filename)
-    # response = return_sitemap(fetched_entire_website)
-    response = return_sitemap(read_json_from_file(website_to_text(website, user_id, max_depth, total_number_of_links)))
+    filename = website_to_text(website, user_id, max_depth, total_number_of_links)
+    print(filename)
+    fetched_entire_website = read_json_from_file(filename)
+    response = return_sitemap(fetched_entire_website)
+    # response = return_sitemap(read_json_from_file(website_to_text(website, user_id, max_depth, total_number_of_links)))
     return response
 
 # From a selected list of sitemaps, tells the number of token used
@@ -48,40 +49,42 @@ def create_vector_from_website():
     website = request.args.get('website')
     user_id = request.args.get('user_id')
     vector_name = vector_name_find(website, user_id)
+    print("file to be vectorised --> ",vector_name)
     content = read_file_to_string(vector_name)
     create_vector(content, vector_name)
-    response3 = "created vector"
+    response3 = vector_name
     return response3
 
 
-@app.route('/query_vectors', methods=['POST'])
-def merge_vectors():
-    website = request.args.get('website')
-    user_id = request.args.get('user_id')
-    query = request.args.get('query')
-    response4 = query_from_vector(query, vector_name)
-    return response4
-
-
-# left this one 👇
-
 @app.route('/create_vector_from_document', methods=['POST'])
 def create_vector_from_document():
-    website = request.args.get('website')
+    filename = request.args.get('filename')
     user_id = request.args.get('user_id')
-    sl_numbers = eval(request.args.get('sl_numbers'))
-    filename = save_filename(website, user_id)
-    response2 = str(num_tokens_from_string(read_file_to_string(create_filtered_json_for_vectorise(filename, filter_json_by_sl_number(sl_numbers, filename)))))
-    return response2
+    file_with_path = f"data/{user_id}/uploads/{filename}"
+    content = read_document(file_with_path)
+    create_vector(content, f"data/{user_id}/vectors/{filename}.pkl")
+    response = f"data/{user_id}/vectors/{filename}.pkl"
+    return response
 
-@app.route('/merge_vectors', methods=['POST'])
-def merge_vectors():
-    website = request.args.get('website')
-    user_id = request.args.get('user_id')
-    sl_numbers = eval(request.args.get('sl_numbers'))
-    filename = save_filename(website, user_id)
-    response2 = str(num_tokens_from_string(read_file_to_string(create_filtered_json_for_vectorise(filename, filter_json_by_sl_number(sl_numbers, filename)))))
-    return response2
+
+# @app.route('/merge_vectors', methods=['POST'])
+# def merge_vectors():
+#     user_id = request.args.get('user_id')
+#     folder_name = f"data/{user_id}/vectors/"
+#     filename = save_filename(website, user_id)
+#     response2 = str(num_tokens_from_string(read_file_to_string(create_filtered_json_for_vectorise(filename, filter_json_by_sl_number(sl_numbers, filename)))))
+#     return response2
+
+
+# @app.route('/query_vectors', methods=['POST'])
+# def merge_vectors():
+#     website = request.args.get('website')
+#     user_id = request.args.get('user_id')
+#     query = request.args.get('query')
+#     # vector_name = vector_name_find(website, user_id)
+#     # Query from MergeDB
+#     response4 = query_from_vector(query, vector_name)
+#     return response4
 
 
 # Opening tunnel
@@ -94,14 +97,3 @@ print(f' * ngrok tunnel "{public_url}"')
 if __name__ == '__main__':
     app.run()
 
-# import sys
-
-# # print the original sys.path
-# print('Original sys.path:', sys.path)
-
-# # append a new directory to sys.path
-# sys.path.append('C:\D-Drive\Debanjan\Projects\e_seller\website_scraping')
-# sys.path.append('C:\D-Drive\Debanjan\Projects\e_seller\db_store_n_query')
-
-# # print the updated sys.path
-# print('Updated sys.path:', sys.path)

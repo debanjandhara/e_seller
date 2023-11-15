@@ -149,7 +149,7 @@ def website_to_text(website, user_id, max_depth, total_number_of_links):
 
     # Folder where you want to store the json files
     # global output_folder
-    output_folder = f"../data/{user_id}/"
+    output_folder = f"data/{user_id}/"
 
     # Maximum depth for recursion
     # global max_depth

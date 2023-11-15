@@ -21,13 +21,11 @@ def save_filename_filtered(website, user_id):
     return filename
 
 def vector_name_find(website, user_id):
-    output_folder = f"data/{user_id}/vectors"
+    output_folder = f"data/{user_id}/vectors/"
     base_url = urlparse(website)
     if base_url:
         filename = output_folder + base_url.netloc + ".filtered.json"
     else:
         filename = output_folder + "unknown_domain.filtered.json"
-    vector_name = f"{output_folder}{filename}"
-    
-    return vector_name
 
+    return filename
