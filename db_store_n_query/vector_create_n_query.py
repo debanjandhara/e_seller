@@ -70,9 +70,9 @@ def create_vector(content, vector_folder_name):
 
 
 
-def query_from_vector(query, userId, filename):
+def query_from_vector(query, user_id):
 
-    vector_folder_name = f"data/{userId}/vectors/{filename}"
+    vector_folder_name = f"data/{user_id}/merged_vector"
 
     # if os.path.exists(f"{vector_name}.pkl"):
     #     with open(f"{vector_name}.pkl", "rb") as f:

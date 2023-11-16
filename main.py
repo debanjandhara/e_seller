@@ -48,11 +48,12 @@ def return_no_of_tokens_from_selection():
 def create_vector_from_website():
     website = request.args.get('website')
     user_id = request.args.get('user_id')
-    vector_name = vector_name_find(website, user_id)
-    print("file to be vectorised --> ",vector_name)
-    content = read_file_to_string(vector_name)
-    create_vector(content, vector_name)
-    response3 = vector_name
+    filename_filtered = save_filename_filtered(website, user_id)
+    print("file to be vectorised --> ",filename_filtered)
+    content = read_document(filename_filtered)
+    vector_folder_name = vector_name_find(website, user_id)
+    create_vector(content, vector_folder_name)
+    response3 = vector_folder_name
     return response3
 
 
@@ -67,24 +68,19 @@ def create_vector_from_document():
     return response
 
 
-# @app.route('/merge_vectors', methods=['POST'])
-# def merge_vectors():
-#     user_id = request.args.get('user_id')
-#     folder_name = f"data/{user_id}/vectors/"
-#     filename = save_filename(website, user_id)
-#     response2 = str(num_tokens_from_string(read_file_to_string(create_filtered_json_for_vectorise(filename, filter_json_by_sl_number(sl_numbers, filename)))))
-#     return response2
+@app.route('/merge_vectors', methods=['POST'])
+def merge_vectors():
+    user_id = request.args.get('user_id')
+    response2 = merge_db(user_id)
+    return response2
 
 
-# @app.route('/query_vectors', methods=['POST'])
-# def merge_vectors():
-#     website = request.args.get('website')
-#     user_id = request.args.get('user_id')
-#     query = request.args.get('query')
-#     # vector_name = vector_name_find(website, user_id)
-#     # Query from MergeDB
-#     response4 = query_from_vector(query, vector_name)
-#     return response4
+@app.route('/query_vectors', methods=['POST'])
+def query_vector():
+    user_id = request.args.get('user_id')
+    query = request.args.get('query')
+    response4 = query_from_vector(query, user_id)
+    return response4
 
 
 # Opening tunnel
