@@ -2,7 +2,6 @@
 .env
 
 # User data --> later to be stored in bucket (cloud)
-data/
 
 # Python modules lies here
 venv/

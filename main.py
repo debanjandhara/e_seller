@@ -62,8 +62,8 @@ def create_vector_from_document():
     user_id = request.args.get('user_id')
     file_with_path = f"data/{user_id}/uploads/{filename}"
     content = read_document(file_with_path)
-    create_vector(content, f"data/{user_id}/vectors/{filename}.pkl")
-    response = f"data/{user_id}/vectors/{filename}.pkl"
+    create_vector(content, f"data/{user_id}/vectors/{filename}")
+    response = f"data/{user_id}/vectors/{filename}"
     return response
 
 
