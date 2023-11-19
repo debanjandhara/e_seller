@@ -5,3 +5,8 @@
 
 # Python modules lies here
 venv/
+
+# Cache data of Python -->
+website_scraping/__pycache__/
+db_store_n_query/__pycache__/
+

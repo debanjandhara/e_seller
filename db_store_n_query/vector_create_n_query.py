@@ -147,7 +147,8 @@ def merge_db(user_id):
     all_items  = os.listdir(vector_base_folder)
     folders = [item for item in all_items if os.path.isdir(os.path.join(vector_base_folder, item))]
     if len(folders)==1:
-        return "Merged - Single"
+        # return "Merged - Single"
+        return "success"
     VectorStore1 = FAISS.load_local(f"{vector_base_folder}/{folders[0]}", embeddings=embeddings)
     VectorStore2 = FAISS.load_local(f"{vector_base_folder}/{folders[1]}", embeddings=embeddings)
     VectorStore2.merge_from(VectorStore1)
@@ -158,7 +159,8 @@ def merge_db(user_id):
         VectorStore2.merge_from(VectorStore1)
         VectorStore2.save_local(final_folder)
 
-    response = "Merged - Multiple"
+    # response = "Merged - Multiple"
+    response = "success"
 
     return response
 
