@@ -1,4 +1,4 @@
-from pyngrok import ngrok
+# from pyngrok import ngrok
 from flask import Flask, request
 import json
 
@@ -16,6 +16,11 @@ app = Flask(__name__)
 # def add_numbers(a, b):
 #     result = a + b
 #     return f"The sum of {a} and {b} is {result}"
+
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
+
 
 # Define an API endpoint for your function
 @app.route('/scrape_website', methods=['POST'])
@@ -103,13 +108,12 @@ def query_vector():
     return json_response
 
 
-# Opening tunnel
-public_url = ngrok.connect("5000", "http")
+# # Opening tunnel
+# public_url = ngrok.connect("5000", "http")
 
-# # Print the public URL
-print(f' * ngrok tunnel "{public_url}"')
+# # # Print the public URL
+# print(f' * ngrok tunnel "{public_url}"')
 
 # Run the Flask app
 if __name__ == '__main__':
-    app.run()
-
+    app.run(host='0.0.0.0', port=8080)
