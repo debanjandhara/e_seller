@@ -143,10 +143,14 @@ def read_document(file_path):
 def merge_db(user_id):
     vector_base_folder = f"data/{user_id}/vectors"
     final_folder = f"data/{user_id}/merged_vector"
+    print(f"----------\n\n{vector_base_folder}\n\n{final_folder}\n\n--------")
     embeddings = OpenAIEmbeddings()
     all_items  = os.listdir(vector_base_folder)
     folders = [item for item in all_items if os.path.isdir(os.path.join(vector_base_folder, item))]
+    print(len(folders))
     if len(folders)==1:
+        VectorStore1 = FAISS.load_local(f"{vector_base_folder}/{folders[0]}", embeddings=embeddings)
+        VectorStore1.save_local(final_folder)
         # return "Merged - Single"
         return "success"
     VectorStore1 = FAISS.load_local(f"{vector_base_folder}/{folders[0]}", embeddings=embeddings)
@@ -191,3 +195,4 @@ def merge_db(user_id):
 
 # create_vector(read_document(r"data/uuid2502/apple.com.filtered.json"), vector_base_folder)--------------
 
+print(merge_db("uuid2300"))

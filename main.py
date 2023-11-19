@@ -52,6 +52,16 @@ def return_no_of_tokens_from_selection():
     json_response = json.dumps({"result": response2})
     return json_response
 
+@app.route('/get_tokens_docs', methods=['POST'])
+def return_no_of_tokens_from_docs():
+    filename = request.args.get('filename')
+    user_id = request.args.get('user_id')
+    file_with_path = f"data/{user_id}/uploads/{filename}"
+    content = read_document(file_with_path)
+    response2 = int(num_tokens_from_string(content))
+    json_response = json.dumps({"result": response2})
+    return json_response
+
 
 @app.route('/create_vector_from_website', methods=['POST'])
 def create_vector_from_website():
@@ -59,7 +69,7 @@ def create_vector_from_website():
     user_id = request.args.get('user_id')
     filename_filtered = save_filename_filtered(website, user_id)
     print("file to be vectorised --> ",filename_filtered)
-    content = read_document(filename_filtered)
+    content = read_file_to_string(filename_filtered)
     vector_folder_name = vector_name_find(website, user_id)
     create_vector(content, vector_folder_name)
     # response3 = vector_folder_name
@@ -78,16 +88,6 @@ def create_vector_from_document():
     # response = f"data/{user_id}/vectors/{filename}"
     response = "success"
     json_response = json.dumps({"result": response})
-    return json_response
-
-@app.route('/get_tokens_docs', methods=['POST'])
-def return_no_of_tokens_from_docs():
-    filename = request.args.get('filename')
-    user_id = request.args.get('user_id')
-    file_with_path = f"data/{user_id}/uploads/{filename}"
-    content = read_document(file_with_path)
-    response2 = int(num_tokens_from_string(content))
-    json_response = json.dumps({"result": response2})
     return json_response
 
 
