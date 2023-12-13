@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 import os
 import openai
 
+import shutil
+
 # -------------
 
 import magic
@@ -167,6 +169,24 @@ def merge_db(user_id):
     response = "success"
 
     return response
+
+
+def delete_folder(folder_path):
+    try:
+        # Check if the folder exists
+        if os.path.exists(folder_path):
+            # Remove the folder and its contents
+            shutil.rmtree(folder_path)
+            print(f"The folder '{folder_path}' has been successfully deleted.")
+        else:
+            print(f"The folder '{folder_path}' does not exist.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+    response = "success"
+
+    return response
+
+
 
 
 # print(query_from_vector("give me a summary about networking", r"data/uuid2502/merged"))

@@ -10,3 +10,5 @@ venv/
 website_scraping/__pycache__/
 db_store_n_query/__pycache__/
 
+# All data of users...
+data/

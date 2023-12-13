@@ -9,7 +9,7 @@ from website_scraping.token_counter import num_tokens_from_string
 
 from db_store_n_query.vector_create_n_query import *
 
-# ngrok.set_auth_token("")
+ngrok.set_auth_token("2VyhNCjOLp7CSpXLCPLpARjBaxX_5hkhw1cktwBjzJ78rSSom")
 
 app = Flask(__name__)
 
@@ -114,6 +114,28 @@ def merge_vectors():
     json_response = json.dumps({"result": response2})
     return json.loads(json_response)
 
+@app.route('/list_all_vector', methods=['POST'])
+def list_all_vector():
+    user_id = request.args.get('user_id')
+    folder_path = f"data/{user_id}/vectors/"
+    json_response = list_folders(folder_path)
+    return json.loads(json_response)
+
+@app.route('/delete_specific_vector', methods=['POST'])
+def delete_specific_vector():
+    user_id = request.args.get('user_id')
+    link = request.args.get('link')
+    filename = request.args.get('filename')
+    website = request.args.get('website')
+    if link is not None:
+        filename = extract_filename_from_link(link)
+    if website is not None:
+        filename = save_only_filename_filtered(website)
+    folder_path = f"data/{user_id}/vectors/{filename}"
+    response2 = delete_folder(folder_path)
+    json_response = json.dumps({"result": response2})
+    return json.loads(json_response)
+
 
 @app.route('/query_vectors', methods=['POST'])
 def query_vector():
@@ -125,12 +147,12 @@ def query_vector():
 
 
 # # Opening tunnel
-# public_url = ngrok.connect("5000", "http")
+public_url = ngrok.connect("5000", "http")
 
 # # Print the public URL
-# print(f' * ngrok tunnel "{public_url}"')
+print(f' * ngrok tunnel "{public_url}"')
 
 # Run the Flask app
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
-    # app.run()
+    # app.run(host='0.0.0.0', port=8080)
+    app.run()

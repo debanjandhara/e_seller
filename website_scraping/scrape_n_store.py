@@ -6,7 +6,7 @@ import os
 import json
 
 def save_filename(website, user_id):
-    output_folder = f"content/{user_id}/"
+    output_folder = f"data/{user_id}/"
     base_url = urlparse(website)
     if base_url:
         filename = output_folder + base_url.netloc + ".json"
