@@ -9,7 +9,7 @@ from website_scraping.token_counter import num_tokens_from_string
 
 from db_store_n_query.vector_create_n_query import *
 
-ngrok.set_auth_token("2VyhNCjOLp7CSpXLCPLpARjBaxX_5hkhw1cktwBjzJ78rSSom")
+ngrok.set_auth_token("2ZUwGNURTLVLJ75FsAXvZ9KiSqV_6AmeZ1JrwQTk3jmAkFAuP")
 
 app = Flask(__name__)
 
@@ -61,7 +61,9 @@ def return_no_of_tokens_from_docs():
     link = request.args.get('link')
     if link is not None:
         filename = extract_filename_from_link(link)
+    print(filename)
     file_with_path = f"data/{user_id}/uploads/{filename}"
+    print(file_with_path)
     content = read_document(file_with_path)
     response2 = int(num_tokens_from_string(content))
     json_response = json.dumps({"result": response2})

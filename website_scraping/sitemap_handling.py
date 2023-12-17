@@ -51,7 +51,7 @@ def create_filtered_json_for_vectorise(filename, filtered_json):
     base, extension = os.path.splitext(filename)
 
     # Add ".filtered" before the extension
-    filename_filtered = base + ".filtered" + extension
+    filename_filtered = base
 
     # Open the file for writing and save the JSON variable to it
     with open(filename_filtered, "w") as json_file:

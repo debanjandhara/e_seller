@@ -53,6 +53,9 @@ def create_vector(content, vector_folder_name):
     chunks = text_splitter.split_text(text=content)
     
     embeddings = OpenAIEmbeddings()
+    
+    print(vector_folder_name)
+    
     VectorStore = FAISS.from_texts(chunks, embedding=embeddings)
     
     # os.makedirs(os.path.dirname(f"{vector_name}.pkl"), exist_ok=True)
@@ -60,6 +63,15 @@ def create_vector(content, vector_folder_name):
     # directory = os.path.dirname(vector_name)
     # if not os.path.exists(directory):
     #     os.makedirs(directory)
+    
+    if os.path.exists(vector_folder_name):
+        try:
+            shutil.rmtree(vector_folder_name)
+            print(f"Folder '{vector_folder_name}' and its contents deleted successfully.")
+        except Exception as e:
+            print(f"Error deleting folder '{vector_folder_name}': {e}")
+    else:
+        print(f"Folder '{vector_folder_name}' does not exist.")
         
     VectorStore.save_local(vector_folder_name)
     
@@ -94,13 +106,36 @@ def query_from_vector(query, user_id):
         response = chain.run(input_documents=docs, question=query)
         print(cb)
     # print("\n\nResponse : ",response)
-    return response
+    
+    print(response)
+    
+    response_openai = openai.Completion.create(
+        engine="text-davinci-002",  # Choose an engine based on your requirements
+        prompt=f"tidy up the grammer, punctuation, meaning : {response}",
+        temperature=0.7,
+    )
+
+    
+    return response_openai.choices[0].text.strip()
 
 
 def read_document(file_path):
     # Use magic to determine the file type
     # mime = magic.Magic()
     # mime = magic.Magic(magic_file=file_path)
+    
+    # try:
+    #     files = os.listdir(file_path)
+    #     for file in files:
+    #         print(file)
+    # except FileNotFoundError:
+    #     print(f"The directory '{file_path}' does not exist.")
+    # except NotADirectoryError:
+    #     print(f"The path '{file_path}' is not a directory.")
+    # except Exception as e:
+    #     print(f"An error occurred: {e}")
+
+    
     file_type = magic.from_file(file_path)
     
     content = ''

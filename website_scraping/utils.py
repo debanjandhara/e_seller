@@ -17,18 +17,18 @@ def save_filename_filtered(website, user_id):
     output_folder = f"data/{user_id}/"
     base_url = urlparse(website)
     if base_url:
-        filename = output_folder + base_url.netloc + ".filtered.json"
+        filename = output_folder + base_url.netloc
     else:
-        filename = output_folder + "unknown_domain.filtered.json"
+        filename = output_folder + "unknown_domain"
 
     return filename
 
 def save_only_filename_filtered(website):
     base_url = urlparse(website)
     if base_url:
-        filename = base_url.netloc + ".filtered.json"
+        filename = base_url.netloc
     else:
-        filename = "unknown_domain.filtered.json"
+        filename = "unknown_domain"
 
     return filename
 
@@ -36,9 +36,9 @@ def vector_name_find(website, user_id):
     output_folder = f"data/{user_id}/vectors/"
     base_url = urlparse(website)
     if base_url:
-        filename = output_folder + base_url.netloc + ".filtered.json"
+        filename = output_folder + base_url.netloc
     else:
-        filename = output_folder + "unknown_domain.filtered.json"
+        filename = output_folder + "unknown_domain"
 
     return filename
 
@@ -54,6 +54,12 @@ def upload_document(link, user_id):
     # Download the file
     response = requests.get(link)
     if response.status_code == 200:
+        
+        if os.path.exists(file_name):
+            # If the file exists, delete it
+            os.remove(file_name)
+            print(f"Deleted existing file: {file_name}")
+        
         # Save the file
         with open(file_name, 'wb') as file:
             file.write(response.content)
@@ -70,23 +76,21 @@ def extract_filename_from_link(link):
 
     return filename
 
-def list_folders(folder_path):
-    try:
-        # Check if the provided path is a directory
-        if os.path.isdir(folder_path):
-            # Get a list of all subdirectories (folders) in the specified directory
-            folders = [f for f in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, f))]
+def list_folders(directory):
+    if not os.path.exists(directory) or not os.path.isdir(directory):
+        return json.dumps({"error": "Invalid directory path"})
 
-            # Convert the list to JSON format
-            result_json = json.dumps({"folders": folders}, indent=2)
+    folders = [f for f in os.listdir(directory) if os.path.isdir(os.path.join(directory, f))]
 
-            return result_json
-        else:
-            return json.dumps({"error": "The provided path is not a directory."}, indent=2)
-    except Exception as e:
-        return json.dumps({"error": f"An error occurred: {e}"}, indent=2)
+    result = {"count": len(folders), "folders": {}}
+
+    for index, folder in enumerate(folders, start=1):
+        result["folders"][index] = folder
+
+    return json.dumps(result, indent=2)
 
 
 # download_link = "https://getsamplefiles.com/download/png/sample-1.png"
 # filename = extract_filename_from_link(download_link)
 # print(f"Extracted filename: {filename}")
+
