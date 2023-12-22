@@ -24,6 +24,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.llms import OpenAI
+from langchain.chat_models import ChatOpenAI
 from langchain.chains.question_answering import load_qa_chain
 from langchain.callbacks import get_openai_callback
 import os
@@ -82,8 +83,6 @@ def create_vector(content, vector_folder_name):
     return vector_folder_name
 
 
-
-
 def query_from_vector(query, user_id):
 
     vector_folder_name = f"data/{user_id}/merged_vector"
@@ -100,23 +99,15 @@ def query_from_vector(query, user_id):
 
     docs = VectorStore.similarity_search(query=query, k=3)
 
-    llm = OpenAI()
+    # llm = OpenAI()
+    llm = ChatOpenAI(model_name='gpt-3.5-turbo')
     chain = load_qa_chain(llm=llm, chain_type="stuff")
     with get_openai_callback() as cb:
         response = chain.run(input_documents=docs, question=query)
         print(cb)
     # print("\n\nResponse : ",response)
-    
-    print(response)
-    
-    response_openai = openai.Completion.create(
-        engine="text-davinci-002",  # Choose an engine based on your requirements
-        prompt=f"tidy up the grammer, punctuation, meaning : {response}",
-        temperature=0.7,
-    )
 
-    
-    return response_openai.choices[0].text.strip()
+    return response
 
 
 def read_document(file_path):
