@@ -86,6 +86,10 @@ def create_vector(content, vector_folder_name):
 def query_from_vector(query, user_id):
 
     vector_folder_name = f"data/{user_id}/merged_vector"
+    
+    if not os.path.exists(vector_folder_name):
+        return "Sorry ! You need to upload documents first to be able to chat with it..."
+
 
     # if os.path.exists(f"{vector_name}.pkl"):
     #     with open(f"{vector_name}.pkl", "rb") as f:
