@@ -88,7 +88,8 @@ def query_from_vector(query, user_id):
     vector_folder_name = f"data/{user_id}/merged_vector"
     
     if not os.path.exists(vector_folder_name):
-        return "Sorry ! You need to upload documents first to be able to chat with it..."
+        response_for_empty_folder = "Sorry ! You need to upload documents first to be able to chat with it..."
+        return response_for_empty_folder
 
 
     # if os.path.exists(f"{vector_name}.pkl"):
@@ -115,49 +116,30 @@ def query_from_vector(query, user_id):
 
 
 def read_document(file_path):
-    # Use magic to determine the file type
-    # mime = magic.Magic()
-    # mime = magic.Magic(magic_file=file_path)
     
-    # try:
-    #     files = os.listdir(file_path)
-    #     for file in files:
-    #         print(file)
-    # except FileNotFoundError:
-    #     print(f"The directory '{file_path}' does not exist.")
-    # except NotADirectoryError:
-    #     print(f"The path '{file_path}' is not a directory.")
-    # except Exception as e:
-    #     print(f"An error occurred: {e}")
+    # Get the file extension
+    _, file_extension = os.path.splitext(file_path)
 
-    
-    file_type = magic.from_file(file_path)
-    
-    content = ''
+    # Convert the extension to lowercase for case-insensitive comparison
+    file_extension = file_extension.lower()
 
-    # Read content based on the file type
-    if file_type.startswith('Microsoft Word'):
-        # # For .docx files
-        # doc = docx.Document(file_path)
-        # content = '\n'.join([paragraph.text for paragraph in doc.paragraphs])
-        if file_path.endswith('.docx'):
-            # For .docx files
-            doc = docx.Document(file_path)
-            content = '\n'.join([paragraph.text for paragraph in doc.paragraphs])
-    elif file_type.startswith('JSON'):
-        # For .json files
-        with open(file_path, 'r') as json_file:
-            content = json.load(json_file)
-    elif file_type.startswith('ASCII'):
-        # For plain text (.txt) files
-        with open(file_path, 'r') as txt_file:
+    # Check file type based on extension
+    if file_extension == '.txt':
+        print(f"The file {file_path} is a Text file.")
+        with open(file_path, 'r', encoding='utf-8') as txt_file:
             content = txt_file.read()
-    elif file_type.startswith('PDF'):
+    elif file_extension == '.docx':
+        print(f"The file {file_path} is a Word document.")
+        doc = docx.Document(file_path)
+        content = '\n'.join([paragraph.text for paragraph in doc.paragraphs])
+    elif file_extension == '.pdf':
+        print(f"The file {file_path} is a PDF document.")
+        # Handle PDF files here
         pdfFileObj = open(file_path, 'rb')
- 
+    
         # creating a pdf reader object
         pdfReader = PyPDF2.PdfReader(pdfFileObj)
- 
+    
         # printing number of pages in pdf file
         # print(len(pdfReader.pages))
 
@@ -169,6 +151,60 @@ def read_document(file_path):
 
         # closing the pdf file object
         pdfFileObj.close()
+    elif file_extension == '.json':
+        print(f"The file {file_path} is a JSON file.")
+        with open(file_path, 'r') as json_file:
+            content = json.load(json_file)
+    else:
+        print(f"The file type of {file_path} is not recognized.")
+    
+
+    
+    # try:
+    #     file_type = magic.Magic()
+    #     detected_type = file_type.from_file(file_path)
+
+    #     content = ''
+
+    #     # Read content based on the detected file type
+    #     if detected_type.startswith('Microsoft Word'):
+    #         if file_path.endswith('.docx'):
+    #             # For .docx files
+    #             doc = docx.Document(file_path)
+    #             content = '\n'.join([paragraph.text for paragraph in doc.paragraphs])
+    #     elif detected_type.startswith('JSON'):
+    #         # For .json files
+    #         with open(file_path, 'r') as json_file:
+    #             content = json.load(json_file)
+    #     elif detected_type.startswith('ASCII') or detected_type.startswith('text/plain') or detected_type.startswith('UTF-8 Unicode text'):
+    #         # For plain text (.txt) files
+    #         with open(file_path, 'r', encoding='utf-8') as txt_file:
+    #             content = txt_file.read()
+    #     elif detected_type.startswith('PDF'):
+    #         # Handle PDF files here
+    #         pdfFileObj = open(file_path, 'rb')
+        
+    #         # creating a pdf reader object
+    #         pdfReader = PyPDF2.PdfReader(pdfFileObj)
+    
+    #         # printing number of pages in pdf file
+    #         # print(len(pdfReader.pages))
+
+    #         # creating a page object
+    #         pageObj = pdfReader.pages[0]
+
+    #         # extracting text from page
+    #         content = pageObj.extract_text()
+
+    #         # closing the pdf file object
+    #         pdfFileObj.close()
+
+    #     else:
+    #         print(f"Unsupported file type: {detected_type}")
+    # except FileNotFoundError:
+    #     print(f"File not found: {file_path}")
+    # except Exception as e:
+    #     print(f"An error occurred: {e}")
 
     return content
 
