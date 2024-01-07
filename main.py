@@ -102,7 +102,7 @@ def create_vector_from_document():
         filename = extract_filename_from_link(link)
     file_with_path = f"data/{user_id}/uploads/{filename}"
     content = read_document(file_with_path)
-    create_vector(content, f"data/{user_id}/uploads/{filename}")
+    create_vector(content, f"data/{user_id}/vectors/{filename}")
     # response = f"data/{user_id}/vectors/{filename}"
     response = "success"
     json_response = json.dumps({"result": response})
