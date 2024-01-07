@@ -9,7 +9,7 @@ from website_scraping.token_counter import num_tokens_from_string
 
 from db_store_n_query.vector_create_n_query import *
 
-ngrok.set_auth_token("2ZUwGNURTLVLJ75FsAXvZ9KiSqV_6AmeZ1JrwQTk3jmAkFAuP")
+# ngrok.set_auth_token("2ZUwGNURTLVLJ75FsAXvZ9KiSqV_6AmeZ1JrwQTk3jmAkFAuP")
 
 app = Flask(__name__)
 
@@ -102,7 +102,7 @@ def create_vector_from_document():
         filename = extract_filename_from_link(link)
     file_with_path = f"data/{user_id}/uploads/{filename}"
     content = read_document(file_with_path)
-    create_vector(content, f"data/{user_id}/vectors/{filename}")
+    create_vector(content, f"data/{user_id}/uploads/{filename}")
     # response = f"data/{user_id}/vectors/{filename}"
     response = "success"
     json_response = json.dumps({"result": response})
@@ -148,11 +148,11 @@ def query_vector():
     return json.loads(json_response)
 
 
-# # Opening tunnel
-public_url = ngrok.connect("5000", "http")
+# # # Opening tunnel
+# public_url = ngrok.connect("5000", "http")
 
-# # Print the public URL
-print(f' * ngrok tunnel "{public_url}"')
+# # # Print the public URL
+# print(f' * ngrok tunnel "{public_url}"')
 
 # Run the Flask app
 if __name__ == '__main__':
