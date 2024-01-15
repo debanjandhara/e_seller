@@ -3,6 +3,7 @@
 from dotenv import load_dotenv
 import os
 import openai
+
 import shutil
 
 # -------------
@@ -82,26 +83,11 @@ def create_vector(content, vector_folder_name):
 
 
 def query_from_vector(query, user_id):
-    
-    from openai import OpenAI
 
     vector_folder_name = f"data/{user_id}/merged_vector"
     
     if not os.path.exists(vector_folder_name):
-        # response_for_empty_folder = "Sorry ! You need to upload documents first to be able to chat with it..."
-        client = OpenAI()
-        response = client.chat.completions.create(
-          model="gpt-3.5-turbo",
-          messages=[
-            {"role": "system", "content": "You are a helpful chatbot, designed to chat with the knowlege base provide to you. You should greet the user, and provide generic answers, when a query is made. Make sure to tell him everytime in consise to provide his documents to be able to have precise chat with it."},
-            {"role": "user", "content": f"Query : {query}"},
-          ]
-        )
-        
-        print(response.choices[0].message.content)
-        
-        response_for_empty_folder = response.choices[0].message.content
-
+        response_for_empty_folder = "Sorry ! You need to upload documents first to be able to chat with it..."
         return response_for_empty_folder
 
 
