@@ -7,7 +7,6 @@ import shutil
 
 # -------------
 
-import magic
 import docx
 import json
 import PyPDF2
@@ -223,8 +222,12 @@ def read_document(file_path):
     return content
 
 def merge_db(user_id):
-    vector_base_folder = f"data/{user_id}/vectors"
-    final_folder = f"data/{user_id}/merged_vector"
+    # vector_base_folder = f"data/{user_id}/vectors"
+    # final_folder = f"data/{user_id}/merged_vector"
+    
+    vector_base_folder = r"C:\D-Drive\Debanjan\Projects\the_art_story\data\vectors"
+    final_folder = r"C:\D-Drive\Debanjan\Projects\the_art_story\data\merged_vector"
+    
     print(f"----------\n\n{vector_base_folder}\n\n{final_folder}\n\n--------")
     embeddings = OpenAIEmbeddings()
     all_items  = os.listdir(vector_base_folder)
@@ -296,3 +299,5 @@ def delete_folder(folder_path):
 # create_vector(read_document(r"data/uuid2502/apple.com.filtered.json"), vector_base_folder)--------------
 
 # print(merge_db("uuid2300"))
+
+merge_db("test")
