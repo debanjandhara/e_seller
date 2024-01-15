@@ -285,5 +285,3 @@ def delete_folder(folder_path):
 # create_vector(read_document(r"data/uuid2502/apple.com.filtered.json"), vector_base_folder)--------------
 
 # print(merge_db("uuid2300"))
-
-merge_db("test")
