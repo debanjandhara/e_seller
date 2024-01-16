@@ -208,13 +208,8 @@ def read_document(file_path):
     return content
 
 def merge_db(user_id):
-    # vector_base_folder = f"data/{user_id}/vectors"
-    # final_folder = f"data/{user_id}/merged_vector"
-    
-    vector_base_folder = r"C:\D-Drive\Debanjan\Projects\the_art_story\data\vectors"
-    final_folder = r"C:\D-Drive\Debanjan\Projects\the_art_story\data\merged_vector"
-    
-    print(f"----------\n\n{vector_base_folder}\n\n{final_folder}\n\n--------")
+    vector_base_folder = f"data/{user_id}/vectors"
+    final_folder = f"data/{user_id}/merged_vector"
     embeddings = OpenAIEmbeddings()
     all_items  = os.listdir(vector_base_folder)
     folders = [item for item in all_items if os.path.isdir(os.path.join(vector_base_folder, item))]
