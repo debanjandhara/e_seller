@@ -71,7 +71,7 @@ def create_vector(content, vector_folder_name):
         except Exception as e:
             print(f"Error deleting folder '{vector_folder_name}': {e}")
     else:
-        print(f"Folder '{vector_folder_name}' does not exist.")
+        print(f"Folder '{vector_folder_name}' does not exist. Creating a New one")
         
     VectorStore.save_local(vector_folder_name)
     
@@ -210,6 +210,15 @@ def read_document(file_path):
 def merge_db(user_id):
     vector_base_folder = f"data/{user_id}/vectors"
     final_folder = f"data/{user_id}/merged_vector"
+    if os.path.exists(final_folder):
+        try:
+            # Use shutil.rmtree to delete the folder and its contents
+            shutil.rmtree(final_folder)
+            print(f"Folder '{final_folder}' and its contents deleted successfully.")
+        except Exception as e:
+            print(f"Error: Unable to delete folder '{final_folder}'. {e}")
+    else:
+        print(f"Folder '{final_folder}' does not exist. Creating a New one")
     embeddings = OpenAIEmbeddings()
     all_items  = os.listdir(vector_base_folder)
     folders = [item for item in all_items if os.path.isdir(os.path.join(vector_base_folder, item))]
